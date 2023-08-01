@@ -44,7 +44,8 @@ router.post('/signin', (req, res) => {
     return;
   }
 
-  User.findOne({ username: req.body.username }).then(data => {
+  User.findOne({ email: req.body.email }).then(data => {
+    console.log(data)
     if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
       res.json({ result: true, token: data.token });
     } else {
