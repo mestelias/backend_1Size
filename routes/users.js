@@ -45,8 +45,8 @@ router.post('/signin', (req, res) => {
   }
 
   User.findOne({ email: req.body.email }).then(data => {
-    console.log(data)
-    if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
+
+   if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
       res.json({ result: true, token: data.token });
     } else {
       res.json({ result: false, error: 'User not found or wrong password' });
