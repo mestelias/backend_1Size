@@ -8,11 +8,15 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const fileUpload = require('express-fileupload');
+
 
 var app = express();
 
 const fetch = require('node-fetch');
 const cors = require('cors');
+
+app.use(fileUpload());
 app.use(cors())
 
 app.use(logger('dev'));
