@@ -67,19 +67,9 @@ User.findOne({ token: req.params.token }).then(data => {
   }
 })
 );
-// router.post('/upload', async (req, res) => {
-    
-//   const photoPath = `./tmp/${uniqid}.jpeg`;
-//   const resultMove = await req.files.profilePic.mv(photoPath);
-  
-//   if(!resultMove) {
-//       const resultCloudinary = await cloudinary.uploader.upload(photoPath);
-//       fs.unlinkSync(photoPath);
-//       res.json({ result: true, url: resultCloudinary.secure_url }); 
-//   } else {
-//       res.json({ result: false, error: resultMove });
-//   }
-//  });
+
+
+
 router.post('/upload', async (req, res) => {
   const photoPath = `tmp/${uniqid()}.jpg`
   console.log(req.files);
@@ -88,6 +78,8 @@ router.post('/upload', async (req, res) => {
     const resultCloudinary = await cloudinary.uploader.upload(photoPath);
     fs.unlinkSync(photoPath);
     res.json({ result: true, url: resultCloudinary.secure_url });
+  } else {
+    res.json({result:false, error:resultMove})
   }
  });
 
