@@ -98,4 +98,31 @@ router.post('/update', async (req, res) => {
     })
 })
 
+router.post("/mensurations", async (req, res) => {
+  try {
+    // Récupérer les données du corps de la requête
+    const { username, tourDePoitrine, tourDeTaille, tourDeHanches } = req.body;
+
+    // Vérifier si l'utilisateur existe dans la base de données
+    const existingUser = await User.findOne({ username });
+    console.log(existingUser.username)
+    if (!existingUser.username) {
+      return res.status(404).json({ error: "Utilisateur introuvable" });
+    }
+    
+    // Mettre à jour les mensurations du haut pour l'utilisateur
+    existingUser.mensurations.haut.tourDePoitrine = tourDePoitrine;
+    existingUser.mensurations.haut.tourDeTaille = tourDeTaille;
+    existingUser.mensurations.haut.tourDeHanches = tourDeHanches;
+    
+
+    // Enregistrer les modifications dans la base de données
+    await existingUser.save();
+    console.log(existingUser.mensurations.haut.tourDePoitrine)
+    res.status(200).json({ message: "Mensurations mises à jour avec succès" });
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de la mise à jour des mensurations" });
+  }
+});
+
 module.exports = router;
