@@ -34,7 +34,6 @@ const userSchema = mongoose.Schema({
       tourDePoitrine: { type: Number },
       tourDeTaille: { type: Number },
       tourDeHanches: { type: Number },
-      taille: { type: Number },
     },
     bas: {
       tourDeBassin: { type: Number },
