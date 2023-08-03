@@ -10,8 +10,9 @@ const Marques = db.collection('Marques')
 //Dans toutes les routes, possibilité de rendre homme/femme ou la categorie haut/bas/chaussure dynamique
 
 //récupère le nom de toutes les marques en bdd
-router.get('/name', async (req, res) => {
-    const marques = await Marques.distinct('name');
+router.get('/names', async (req, res) => {
+    const {categorie, sexe} = req.query // Recevoir la catégorie comme un paramètre de requète 
+    const marques = await Marques.distinct('name', { [`${sexe}.${categorie}`] : {$exists: true}})
     res.json(marques);
   });
 
