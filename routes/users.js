@@ -97,6 +97,39 @@ router.post('/update', async (req, res) => {
     })
 })
 
+// Route pour enregistrer un HAUT de l'utilisateur
+router.post('/vetements/haut/:token', (req, res) => {
+  
+  console.log(req.body);
+
+  const newHaut = {
+    marque: req.body.marque,
+    type: req.body.type,
+    coupe: req.body.coupe,
+    taille: req.body.taille,
+  };
+
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    { $push: { 'vetements.haut': newHaut } },
+    { new: true }
+  )
+    .then((result) => {
+      console.log(result)
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({
+          result: false,
+          error: 'Utilisateur non trouvé ou aucune mise à jour effectuée',
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
+
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
 
