@@ -8,7 +8,6 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
-
 const uniqid = require('uniqid');
 
 router.post('/signup', (req, res) => {
@@ -97,5 +96,88 @@ router.post('/update', async (req, res) => {
       }
     })
 })
+
+// Route pour mettre à jour les mensurations HAUT de l'utilisateur
+router.put('/mensurations/haut/:token', (req, res) => {
+
+  // Mettre à jour les mensurations
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    {
+      $set: {
+        'mensurations.haut.tourDePoitrine': req.body.tourDePoitrine,
+        'mensurations.haut.tourDeTaille': req.body.tourDeTaille,
+        'mensurations.haut.tourDeHanches': req.body.tourDeHanches,
+      },
+    },
+    { new : true }
+  )
+    .then(result => {
+
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
+
+// Route pour mettre à jour les mensurations BAS de l'utilisateur
+router.put('/mensurations/bas/:token', (req, res) => {
+
+  // Mettre à jour les mensurations 
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    {
+      $set: {
+        'mensurations.bas.tourDeBassin': req.body.tourDeBassin,
+        'mensurations.bas.tourDeTaille': req.body.tourDeTaille,
+        'mensurations.bas.longueurJambe': req.body.longueurJambe,
+      },
+    },
+    { new : true }
+  )
+    .then(result => {
+
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
+
+// Route pour mettre à jour les mensurations CHAUSSURES de l'utilisateur
+router.put('/mensurations/chaussures/:token', (req, res) => {
+
+  // Mettre à jour les mensurations
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    {
+      $set: {
+        'mensurations.chaussures.longueur': req.body.longueur,
+        'mensurations.chaussures.pointure': req.body.pointure,
+      },
+    },
+    { new : true }
+  )
+    .then(result => {
+
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
 
 module.exports = router;
