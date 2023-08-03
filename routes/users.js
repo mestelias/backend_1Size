@@ -100,7 +100,7 @@ router.post('/update', async (req, res) => {
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
 
-  // Mettre à jour les mensurations pour l'utilisateur
+  // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
@@ -128,7 +128,7 @@ router.put('/mensurations/haut/:token', (req, res) => {
 // Route pour mettre à jour les mensurations BAS de l'utilisateur
 router.put('/mensurations/bas/:token', (req, res) => {
 
-  // Mettre à jour les mensurations pour l'utilisateur
+  // Mettre à jour les mensurations 
   User.findOneAndUpdate(
     { token: req.params.token },
     {
@@ -156,7 +156,7 @@ router.put('/mensurations/bas/:token', (req, res) => {
 // Route pour mettre à jour les mensurations CHAUSSURES de l'utilisateur
 router.put('/mensurations/chaussures/:token', (req, res) => {
 
-  // Mettre à jour les mensurations pour l'utilisateur
+  // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
