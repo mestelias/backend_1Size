@@ -148,9 +148,9 @@ router.put('/mensurations/haut/:token', (req, res) => {
     .then(result => {
 
       if (result) {
-        res.json({ result: true, message: 'Mise à jour réussie' });
+        res.json({ result: true, message: 'Vos mensurations ont été mises à jour.' });
       } else {
-        res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
+        res.json({ result: false, error: "Erreur, la mise à jour n'a pas pu être effectuée" });
       }
     })
     .catch(error => {
@@ -176,7 +176,7 @@ router.put('/mensurations/bas/:token', (req, res) => {
     .then(result => {
 
       if (result) {
-        res.json({ result: true, message: 'Mise à jour réussie' });
+        res.json({ result: true, message: 'Vos mensurations ont été mises à jour.' });
       } else {
         res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
       }
@@ -203,7 +203,7 @@ router.put('/mensurations/chaussures/:token', (req, res) => {
     .then(result => {
 
       if (result) {
-        res.json({ result: true, message: 'Mise à jour réussie' });
+        res.json({ result: true, message: 'Vos mensurations ont été mises à jour.' });
       } else {
         res.json({ result: false, error: 'Utilisateur non trouvé ou aucune mise à jour effectuée' });
       }
