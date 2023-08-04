@@ -67,7 +67,12 @@ User.findOne({ token: req.params.token }).then(data => {
 })
 );
 
-
+router.get('/userclothes', async (req, res) => {
+const { token, categorie } = req.query;
+const document = await User.findOne({ token: token });
+const mensurationsHauts = document.vetements[categorie]
+res.json(mensurationsHauts);
+})
 
 router.post('/upload', async (req, res) => {
   const photoPath = `tmp/${uniqid()}.jpg`
@@ -107,6 +112,7 @@ router.post('/vetements/haut/:token', (req, res) => {
     type: req.body.type,
     coupe: req.body.coupe,
     taille: req.body.taille,
+    mensurations : req.body.mensurations,
   };
 
   User.findOneAndUpdate(
