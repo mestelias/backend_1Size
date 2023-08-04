@@ -138,6 +138,7 @@ router.post('/vetements/haut/:token', (req, res) => {
 
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
+  console.log(req.body)
 
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
