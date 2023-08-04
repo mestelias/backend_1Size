@@ -136,6 +136,31 @@ router.post('/vetements/haut/:token', (req, res) => {
     });
 });
 
+//Route pour supprimer un vêtement de l'utilisateur
+
+router.delete('/vetements/haut/:token/:vetementId', (req, res) => {
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    { $pull: { 'vetements.haut': { _id: req.params.vetementId } } },
+    { new: true }
+  )
+    .then((result) => {
+      console.log(result);
+      if (result) {
+        res.json({ result: true, message: 'Suppression réussie' });
+      } else {
+        res.json({
+          result: false,
+          error: 'Utilisateur non trouvé ou aucun vêtement supprimé',
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ result: false, error: 'Erreur serveur lors de la suppression' });
+    });
+});
+
+
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
 
