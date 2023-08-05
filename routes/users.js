@@ -67,6 +67,8 @@ User.findOne({ token: req.params.token }).then(data => {
 })
 );
 
+//TODO vérifier le nom de la variable maintenant que la categorie est dynamique
+
 router.get('/userclothes', async (req, res) => {
 const { token, categorie } = req.query;
 const document = await User.findOne({ token: token });
@@ -101,6 +103,8 @@ router.post('/update', async (req, res) => {
       }
     })
 })
+// TODO ajouter des routes pour ajouter, supprimer des bas et des chaussures
+
 
 // Route pour enregistrer un HAUT de l'utilisateur
 router.post('/vetements/haut/:token', (req, res) => {
@@ -136,7 +140,7 @@ router.post('/vetements/haut/:token', (req, res) => {
     });
 });
 
-//Route pour supprimer un vêtement de l'utilisateur
+//Route pour supprimer un haut de l'utilisateur
 
 router.delete('/vetements/haut/:token/:vetementId', (req, res) => {
   User.findOneAndUpdate(
