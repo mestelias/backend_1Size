@@ -67,13 +67,12 @@ User.findOne({ token: req.params.token }).then(data => {
 })
 );
 
-//TODO vérifier le nom de la variable maintenant que la categorie est dynamique
 
 router.get('/userclothes', async (req, res) => {
 const { token, categorie } = req.query;
 const document = await User.findOne({ token: token });
-const mensurationsHauts = document.vetements[categorie]
-res.json(mensurationsHauts);
+const mensurations = document.vetements[categorie]
+res.json(mensurations);
 })
 
 router.post('/upload', async (req, res) => {
@@ -114,12 +113,13 @@ router.post('/update', async (req, res) => {
 // TODO ajouter des routes pour ajouter, supprimer des bas et des chaussures
 
 
-// Route pour enregistrer un HAUT de l'utilisateur
-router.post('/vetements/haut/:token', (req, res) => {
+// Route pour enregistrer un vêtement de l'utilisateur
+router.post('/vetements/:categorie/:token', (req, res) => {
   
+  const categorie = req.params.categorie
   console.log(req.body);
 
-  const newHaut = {
+  const newItem = {
     marque: req.body.marque,
     type: req.body.type,
     coupe: req.body.coupe,
@@ -129,7 +129,7 @@ router.post('/vetements/haut/:token', (req, res) => {
 
   User.findOneAndUpdate(
     { token: req.params.token },
-    { $push: { 'vetements.haut': newHaut } },
+    { $push: { [`vetements.${categorie}`]: newItem } },
     { new: true }
   )
     .then((result) => {
@@ -148,12 +148,13 @@ router.post('/vetements/haut/:token', (req, res) => {
     });
 });
 
-//Route pour supprimer un haut de l'utilisateur
+//Route pour supprimer un vêtement de l'utilisateur
 
-router.delete('/vetements/haut/:token/:vetementId', (req, res) => {
+router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
+  const categorie = req.params.categorie
   User.findOneAndUpdate(
     { token: req.params.token },
-    { $pull: { 'vetements.haut': { _id: req.params.vetementId } } },
+    { $pull: { [`vetements.${categorie}`] : { _id: req.params.vetementId } } },
     { new: true }
   )
     .then((result) => {
