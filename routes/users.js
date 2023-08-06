@@ -213,4 +213,54 @@ router.put('/mensurations/chaussures/:token', (req, res) => {
     });
 });
 
+// Route pour récupérer les mensurations HAUT de l'utilisateur
+router.get('/mensurations/haut/:token', (req, res) => {
+
+  User.findOne({ token: req.params.token }, 'mensurations.haut')
+    .then(user => {
+      if (user && user.mensurations && user.mensurations.haut) {
+        res.json({ result: true, data: user.mensurations.haut });
+      } else {
+        res.json({ result: false, error: 'Aucune mensuration HAUT trouvée pour cet utilisateur' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la récupération' });
+    });
+});
+
+// Route pour récupérer les mensurations BAS de l'utilisateur
+router.get('/mensurations/bas/:token', (req, res) => {
+
+  User.findOne({ token: req.params.token }, 'mensurations.bas')
+    .then(user => {
+      if (user && user.mensurations && user.mensurations.bas) {
+        res.json({ result: true, data: user.mensurations.bas });
+      } else {
+        res.json({ result: false, error: 'Aucune mensuration BAS trouvée pour cet utilisateur' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la récupération' });
+    });
+});
+
+// Route pour récupérer les mensurations CHAUSSURES de l'utilisateur
+router.get('/mensurations/chaussures/:token', (req, res) => {
+
+  User.findOne({ token: req.params.token }, 'mensurations.chaussures')
+    .then(user => {
+      if (user && user.mensurations && user.mensurations.chaussures) {
+        res.json({ result: true, data: user.mensurations.chaussures });
+      } else {
+        res.json({ result: false, error: 'Aucune mensuration CHAUSSURES trouvée pour cet utilisateur' });
+      }
+    })
+    .catch(error => {
+      res.json({ result: false, error: 'Erreur serveur lors de la récupération' });
+    });
+});
+
+
+
 module.exports = router;
