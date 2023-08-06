@@ -32,7 +32,7 @@ router.post('/signup', (req, res) => {
       });
 
       newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token });
+        res.json({ result: true, data:newDoc });
       });
     } else {
       // User already exists in database
@@ -50,17 +50,17 @@ router.post('/signin', (req, res) => {
   User.findOne({ email: req.body.email }).then(data => {
 
    if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
-      res.json({ result: true, token: data.token });
+      res.json({ result: true, data });
     } else {
       res.json({ result: false, error: 'User not found or wrong password' });
     }
   });
 });
 
-router.get('/userdata:token', (req, res) => 
+router.get('/userdata/:token', (req, res) => 
 User.findOne({ token: req.params.token }).then(data => {
   if (data) {
-    res.json({ nom: data.nom, prenom: data.prenom, genre: data.genre, username: data.username, email: data.email });
+    res.json({ nom: data.nom, prenom: data.prenom, genre: data.genre, username: data.username, email: data.email, image: data.image });
   } else {
     res.json({ result: false, error: 'User not found' });
   }
@@ -92,7 +92,15 @@ router.post('/upload', async (req, res) => {
 router.post('/update', async (req, res) => {  
     User.findOneAndUpdate(
       { token: req.body.token },
-      { $set: { image: req.body.image } },
+      { $set: { 
+        image: req.body.image,
+        username: req.body.username,
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        email: req.body.email,
+        genre: req.body.genre 
+        }
+      },
       { new : true }
     )
     .then(updatedDoc => {
