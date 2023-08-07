@@ -69,10 +69,18 @@ User.findOne({ token: req.params.token }).then(data => {
 
 
 router.get('/userclothes', async (req, res) => {
-const { token, categorie } = req.query;
-const document = await User.findOne({ token: token });
-const mensurations = document.vetements[categorie]
-res.json(mensurations);
+  const { token, categorie } = req.query;
+  const document = await User.findOne({ token: token });
+  const mensurations = document.vetements[categorie]
+  res.json(mensurations);
+})
+
+//route pour checker si il a déjà des mensurations calibrées
+router.get('/mensurations', async (req, res) => {
+  const { token, categorie } = req.query;
+  const document = await User.findOne({ token: token });
+  const mensurations = document.mensurations[categorie]
+  res.json(mensurations);
 })
 
 router.post('/upload', async (req, res) => {
