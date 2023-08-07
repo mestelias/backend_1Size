@@ -17,16 +17,19 @@ const userSchema = mongoose.Schema({
       type: { type: String },
       coupe: { type: String },
       taille: { type: String },
+      mensurations : {type : Object},
     }],
     bas: [{
       marque: { type: String },
       type: { type: String },
       coupe: { type: String },
       taille: { type: String },
+      mensurations : {type : Object},
     }],
     chaussures : [{
       marque: { type: String },
       taille: { type: Number },
+      mensurations : {type : Object},
     }],
   },
   mensurations: {
