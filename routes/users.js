@@ -16,8 +16,8 @@ router.post('/signup', (req, res) => {
     return;
   }
 
-  // Check if the user has not already been registered
-  User.findOne({ email: req.body.email }).then(data => {
+  // Check if the user has not already been registered (avec Regex pour recherche insensible à la casse)
+  User.findOne({ email: { $regex: new RegExp(req.body.email, 'i') } }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.motdepasse, 10);
 
@@ -47,7 +47,7 @@ router.post('/signin', (req, res) => {
     return;
   }
 
-  User.findOne({ email: req.body.email }).then(data => {
+ User.findOne({ email: { $regex: new RegExp(req.body.email, 'i') } }).then(data => {
 
    if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
       res.json({ result: true, data });
