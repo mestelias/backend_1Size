@@ -35,6 +35,10 @@ router.get('/tailles', async (req, res) => {
 //récupère les différentes tailles d'un type d'une marque avec leurs mensurations et selon le sexe
 router.get('/tailleswithmensurations', async (req, res) => {
     const { marque, type, sexe, categorie } = req.query;
+    console.log(marque)
+    console.log(type)
+    console.log(sexe)
+    console.log(categorie)
     const document = await Marques.findOne({ name: marque });
     const tailles = document[sexe][categorie][type];
     res.json(tailles);
