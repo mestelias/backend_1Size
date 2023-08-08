@@ -156,6 +156,41 @@ router.post('/vetements/:categorie/:token', (req, res) => {
     });
 });
 
+// Route pour enregistrer temporairement un vêtement de l'utilisateur
+router.post('/vetementsenattente/:categorie/:token', (req, res) => {
+  
+  const categorie = req.params.categorie
+  console.log('body',req.body);
+
+  const newItem = {
+    marque: req.body.marque,
+    type: req.body.type,
+    coupe: req.body.coupe,
+    taille: req.body.taille,
+    mensurations : req.body.mensurations,
+  };
+
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    { $push: { [`vetementsenattente.${categorie}`]: newItem } },
+    { new: true }
+  )
+    .then((result) => {
+      console.log(result)
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({
+          result: false,
+          error: 'Utilisateur non trouvé ou aucune mise à jour effectuée',
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
+
 //Route pour supprimer un vêtement de l'utilisateur
 
 router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
