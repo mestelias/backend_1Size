@@ -184,16 +184,16 @@ router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
 
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
-  console.log(req.body)
+  const { firstValue, secondValue, thirdValue } = req.body
 
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.haut.tourDePoitrine': req.body.tourDePoitrine,
-        'mensurations.haut.tourDeTaille': req.body.tourDeTaille,
-        'mensurations.haut.tourDeHanches': req.body.tourDeHanches,
+        'mensurations.haut.tourDePoitrine': firstValue,
+        'mensurations.haut.tourDeTaille': secondValue,
+        'mensurations.haut.tourDeHanches': thirdValue,
       },
     },
     { new : true }
@@ -213,15 +213,17 @@ router.put('/mensurations/haut/:token', (req, res) => {
 
 // Route pour mettre à jour les mensurations BAS de l'utilisateur
 router.put('/mensurations/bas/:token', (req, res) => {
+  
+  const {firstValue, secondValue, thirdValue} = req.body
 
   // Mettre à jour les mensurations 
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.bas.tourDeBassin': req.body.tourDeBassin,
-        'mensurations.bas.tourDeTaille': req.body.tourDeTaille,
-        'mensurations.bas.longueurJambe': req.body.longueurJambe,
+        'mensurations.bas.tourDeBassin': firstValue,
+        'mensurations.bas.tourDeTaille': secondValue,
+        'mensurations.bas.longueurJambe': thirdValue,
       },
     },
     { new : true }
@@ -242,13 +244,16 @@ router.put('/mensurations/bas/:token', (req, res) => {
 // Route pour mettre à jour les mensurations CHAUSSURES de l'utilisateur
 router.put('/mensurations/chaussures/:token', (req, res) => {
 
+  const { firstValue, secondValue } = req.body 
+
+  console.log("reqbody",req.body)
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.chaussures.longueur': req.body.longueur,
-        'mensurations.chaussures.pointure': req.body.pointure,
+        'mensurations.chaussures.longueur': firstValue,
+        'mensurations.chaussures.pointure': secondValue,
       },
     },
     { new : true }
