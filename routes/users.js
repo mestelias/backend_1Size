@@ -16,8 +16,8 @@ router.post('/signup', (req, res) => {
     return;
   }
 
-  // Check if the user has not already been registered
-  User.findOne({ email: req.body.email }).then(data => {
+  // Check if the user has not already been registered (avec Regex pour recherche insensible à la casse)
+  User.findOne({ email: { $regex: new RegExp(req.body.email, 'i') } }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.motdepasse, 10);
 
@@ -47,7 +47,7 @@ router.post('/signin', (req, res) => {
     return;
   }
 
-  User.findOne({ email: req.body.email }).then(data => {
+ User.findOne({ email: { $regex: new RegExp(req.body.email, 'i') } }).then(data => {
 
    if (data && bcrypt.compareSync(req.body.motdepasse, data.motdepasse)) {
       res.json({ result: true, data });
@@ -138,6 +138,41 @@ router.post('/vetements/:categorie/:token', (req, res) => {
   User.findOneAndUpdate(
     { token: req.params.token },
     { $push: { [`vetements.${categorie}`]: newItem } },
+    { new: true }
+  )
+    .then((result) => {
+      console.log(result)
+      if (result) {
+        res.json({ result: true, message: 'Mise à jour réussie' });
+      } else {
+        res.json({
+          result: false,
+          error: 'Utilisateur non trouvé ou aucune mise à jour effectuée',
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ result: false, error: 'Erreur serveur lors de la mise à jour' });
+    });
+});
+
+// Route pour enregistrer temporairement un vêtement de l'utilisateur
+router.post('/vetementsenattente/:categorie/:token', (req, res) => {
+  
+  const categorie = req.params.categorie
+  console.log('body',req.body);
+
+  const newItem = {
+    marque: req.body.marque,
+    type: req.body.type,
+    coupe: req.body.coupe,
+    taille: req.body.taille,
+    mensurations : req.body.mensurations,
+  };
+
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    { $push: { [`vetementsenattente.${categorie}`]: newItem } },
     { new: true }
   )
     .then((result) => {
