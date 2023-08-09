@@ -57,6 +57,7 @@ router.post('/signin', (req, res) => {
   });
 });
 
+
 router.get('/userdata/:token', (req, res) => 
 User.findOne({ token: req.params.token }).then(data => {
   if (data) {
@@ -67,12 +68,28 @@ User.findOne({ token: req.params.token }).then(data => {
 })
 );
 
-
+// Route pour récupérer les vêtements de l’utilisateur d'une certaine catégorie (haut/bas/chaussures)
 router.get('/userclothes', async (req, res) => {
   const { token, categorie } = req.query;
   const document = await User.findOne({ token: token });
   const mensurations = document.vetements[categorie]
   res.json(mensurations);
+})
+
+// Route pour récupérer tous les vêtements de l’utilisateur
+router.get('/alluserclothes', async (req, res) => {
+  const { token, categorie } = req.query;
+  const document = await User.findOne({ token: token });
+  const mensurations = document.vetements
+  res.json(mensurations);
+})
+
+// Route pour récupérer tous les vêtements en attente de l’utilisateur
+router.get('/allenattente', async (req, res) => {
+  const { token } = req.query;
+  const document = await User.findOne({ token: token });
+  const enattente = document.vetementsenattente
+  res.json(enattente);
 })
 
 //route pour checker si il a déjà des mensurations calibrées
@@ -133,6 +150,7 @@ router.post('/vetements/:categorie/:token', (req, res) => {
     coupe: req.body.coupe,
     taille: req.body.taille,
     mensurations : req.body.mensurations,
+    fit : Boolean(req.body.fit)
   };
 
   User.findOneAndUpdate(
@@ -156,7 +174,7 @@ router.post('/vetements/:categorie/:token', (req, res) => {
     });
 });
 
-// Route pour enregistrer temporairement un vêtement de l'utilisateur
+// Route pour enregistrer un vêtement en attente de l'utilisateur
 router.post('/vetementsenattente/:categorie/:token', (req, res) => {
   
   const categorie = req.params.categorie
@@ -168,6 +186,7 @@ router.post('/vetementsenattente/:categorie/:token', (req, res) => {
     coupe: req.body.coupe,
     taille: req.body.taille,
     mensurations : req.body.mensurations,
+    fit : Boolean(req.body.fit)
   };
 
   User.findOneAndUpdate(
@@ -192,7 +211,6 @@ router.post('/vetementsenattente/:categorie/:token', (req, res) => {
 });
 
 //Route pour supprimer un vêtement de l'utilisateur
-
 router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
   const categorie = req.params.categorie
   User.findOneAndUpdate(
@@ -216,19 +234,42 @@ router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
     });
 });
 
+//Route pour supprimer un vêtement en attente de l'utilisateur
+router.delete('/enattente/:categorie/:token/:vetementId', (req, res) => {
+  const categorie = req.params.categorie
+  User.findOneAndUpdate(
+    { token: req.params.token },
+    { $pull: { [`vetementsenattente.${categorie}`] : { _id: req.params.vetementId } } },
+    { new: true }
+  )
+    .then((result) => {
+      console.log(result);
+      if (result) {
+        res.json({ result: true, message: 'Suppression réussie' });
+      } else {
+        res.json({
+          result: false,
+          error: 'Utilisateur non trouvé ou aucun vêtement en attente supprimé',
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ result: false, error: 'Erreur serveur lors de la suppression' });
+    });
+});
 
 // Route pour mettre à jour les mensurations HAUT de l'utilisateur
 router.put('/mensurations/haut/:token', (req, res) => {
-  console.log(req.body)
+  const { firstValue, secondValue, thirdValue } = req.body
 
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.haut.tourDePoitrine': req.body.tourDePoitrine,
-        'mensurations.haut.tourDeTaille': req.body.tourDeTaille,
-        'mensurations.haut.tourDeHanches': req.body.tourDeHanches,
+        'mensurations.haut.tourDePoitrine': firstValue,
+        'mensurations.haut.tourDeTaille': secondValue,
+        'mensurations.haut.tourDeHanches': thirdValue,
       },
     },
     { new : true }
@@ -248,15 +289,17 @@ router.put('/mensurations/haut/:token', (req, res) => {
 
 // Route pour mettre à jour les mensurations BAS de l'utilisateur
 router.put('/mensurations/bas/:token', (req, res) => {
+  
+  const {firstValue, secondValue, thirdValue} = req.body
 
   // Mettre à jour les mensurations 
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.bas.tourDeBassin': req.body.tourDeBassin,
-        'mensurations.bas.tourDeTaille': req.body.tourDeTaille,
-        'mensurations.bas.longueurJambe': req.body.longueurJambe,
+        'mensurations.bas.tourDeBassin': firstValue,
+        'mensurations.bas.tourDeTaille': secondValue,
+        'mensurations.bas.longueurJambe': thirdValue,
       },
     },
     { new : true }
@@ -277,13 +320,16 @@ router.put('/mensurations/bas/:token', (req, res) => {
 // Route pour mettre à jour les mensurations CHAUSSURES de l'utilisateur
 router.put('/mensurations/chaussures/:token', (req, res) => {
 
+  const { firstValue, secondValue } = req.body 
+
+  console.log("reqbody",req.body)
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
     {
       $set: {
-        'mensurations.chaussures.longueur': req.body.longueur,
-        'mensurations.chaussures.pointure': req.body.pointure,
+        'mensurations.chaussures.longueur': firstValue,
+        'mensurations.chaussures.pointure': secondValue,
       },
     },
     { new : true }

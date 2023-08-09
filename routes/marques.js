@@ -51,13 +51,23 @@ router.get('/tailles', async (req, res) => {
     res.json(tailles);
 });
 
+// Récupère les mensurations d'UNE taille d'UNE marque d'un vêtement
+router.get('/onemensuration', async (req, res) => {
+    const { marque, type, sexe, categorie, taille } = req.query;
+    const document = await Marque.findOne({ name: marque });
+    const tailles = Object.keys(document[sexe][categorie][type][taille]);
+    res.json(tailles);
+});
 //récupère les différentes tailles d'un type d'une marque avec leurs mensurations et selon le sexe
 router.get('/tailleswithmensurations', async (req, res) => {
     const { marque, type, sexe, categorie } = req.query;
+<<<<<<< HEAD
     console.log(marque)
     console.log(type)
     console.log(sexe)
     console.log(categorie)
+=======
+>>>>>>> f44452633317545a29ef40be873ee9a64abd7bda
     const document = await Marque.findOne({ name: marque });
     const tailles = document[sexe][categorie][type];
     res.json(tailles);

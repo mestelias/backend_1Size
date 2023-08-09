@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema({
       coupe: { type: String },
       taille: { type: String },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
     bas: [{
       marque: { type: String },
@@ -25,11 +26,13 @@ const userSchema = mongoose.Schema({
       coupe: { type: String },
       taille: { type: String },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
     chaussures : [{
       marque: { type: String },
       taille: { type: Number },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
   },
   vetementsenattente: { 
@@ -39,6 +42,7 @@ const userSchema = mongoose.Schema({
       coupe: { type: String },
       taille: { type: String },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
     bas: [{
       marque: { type: String },
@@ -46,11 +50,13 @@ const userSchema = mongoose.Schema({
       coupe: { type: String },
       taille: { type: String },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
     chaussures : [{
       marque: { type: String },
       taille: { type: Number },
       mensurations : {type : Object},
+      fit : {type : Boolean},
     }],
   },
   mensurations: {
