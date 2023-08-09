@@ -60,7 +60,7 @@ router.get('/tailleswithmensurations', async (req, res) => {
     console.log(type)
     console.log(sexe)
     console.log(categorie)
-    const document = await Marques.findOne({ name: marque });
+    const document = await Marque.findOne({ name: marque });
     const tailles = document[sexe][categorie][type];
     res.json(tailles);
 });
