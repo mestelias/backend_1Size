@@ -301,4 +301,54 @@ router.put('/mensurations/chaussures/:token', (req, res) => {
     });
 });
 
+
+// Affiche la liste d'amis d'un utilisateur
+router.get('/friends', async (req, res) => {
+  const { token } = req.query;
+
+  const document = await User.findOne({ token: token }).populate('amis');
+
+  if (!document) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  // Tri des amis par 'username' en ordre alphabétique
+  const sortedFriends = document.amis.sort((a, b) => a.username.localeCompare(b.username));
+
+  res.json(sortedFriends);
+});
+
+
+// Permet d'ajouter un nouvel ami par usersame
+router.post('/addfriend', async (req, res) => {
+  const { token, friendUsername } = req.body;
+  
+  const user = await User.findOne({ token: token });
+  const friend = await User.findOne({ username: friendUsername });
+
+  if (!friend) {
+      return res.status(404).json({ message: "Ami non trouvé" });
+  }
+
+  // Vérifier si l'ami est déjà dans la liste
+  if (user.amis.includes(friend._id)) {
+      return res.status(400).json({ message: "L'ami est déjà dans votre liste" });
+  }
+
+  user.amis.push(friend._id);
+  await user.save();
+
+  res.json({ message: "Ami ajouté avec succès!" });
+});
+
+// permet d'afficher la liste des utilisateurs selon le username (ou une partie du username)
+router.get('/searchfriend', async (req, res) => {
+  const { username } = req.query;
+  
+  const users = await User.find({ username: new RegExp(username, 'i') });
+  
+  console.log(users.map(e => e.username))
+  return res.json(username);
+});
+
 module.exports = router;

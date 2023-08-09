@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
   motdepasse: { type: String, required: true },
   token: { type: String },
   image: { type: String },
-  amis: [{ type: String, ref: "User" }],
+  amis: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   vetements: { 
     haut: [{
       marque: { type: String },
