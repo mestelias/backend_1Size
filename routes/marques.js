@@ -15,11 +15,9 @@ router.get('/names', async (req, res) => {
 
 // //récupère les logos de toutes les marques en bdd
 router.get('/logos', async (req, res) => {
-    // const {categorie, sexe} = req.query;
-    
+    const {categorie, sexe} = req.query;
     // Trouvez toutes les marques qui répondent au critère
-    const marques = await Marque.find({name:'Lacoste'}); // 'name image' spécifie les champs à sélectionner
-    console.log(marques)
+    const marques = await Marque.find({ [`${sexe}.${categorie}`] : {$exists: true}},'name url')
     res.json(marques);
 });
 
