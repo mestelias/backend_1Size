@@ -387,6 +387,30 @@ router.post('/addfriend', async (req, res) => {
   res.json({ success: true, message: "Ami ajouté avec succès!" });
 });
 
+// Permet de supprimer un ami par username
+router.delete('/deletefriend', async (req, res) => {
+  const { token, friendUsername } = req.body;
+  
+  const user = await User.findOne({ token: token });
+  const friend = await User.findOne({ username: friendUsername });
+
+  if (!friend) {
+      return res.status(404).json({ message: "Ami non trouvé" });
+  }
+
+  // Vérifier si l'ami est dans la liste
+  if (!user.amis.includes(friend._id)) {
+      return res.status(400).json({ message: "L'ami n'est pas dans votre liste" });
+  }
+
+  // Supprimer l'ami de la liste
+  user.amis.pull(friend._id);
+  await user.save();
+
+  res.json({ success: true, message: "Ami supprimé avec succès!" });
+});
+
+
 // permet d'afficher la liste des utilisateurs selon le username (ou une partie du username)
 router.get('/searchfriend', async (req, res) => {
   const { username } = req.query;
