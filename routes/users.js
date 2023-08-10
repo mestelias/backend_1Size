@@ -384,7 +384,7 @@ router.post('/addfriend', async (req, res) => {
   user.amis.push(friend._id);
   await user.save();
 
-  res.json({ message: "Ami ajouté avec succès!" });
+  res.json({ success: true, message: "Ami ajouté avec succès!" });
 });
 
 // permet d'afficher la liste des utilisateurs selon le username (ou une partie du username)
@@ -394,7 +394,7 @@ router.get('/searchfriend', async (req, res) => {
   const users = await User.find({ username: new RegExp(username, 'i') });
   
   console.log(users.map(e => e.username))
-  return res.json(username);
+  return res.json(users);
 });
 
 module.exports = router;
