@@ -15,8 +15,7 @@ const marqueSchema = mongoose.Schema({
     chaussures:{type:Object},
   }  
 })
- 
-  
+
 
 // Création du modèle pour les marques basé sur le schéma
 const Marque = mongoose.model("marques", marqueSchema);

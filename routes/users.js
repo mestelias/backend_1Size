@@ -197,7 +197,7 @@ router.post('/vetementsenattente/:categorie/:token', (req, res) => {
     .then((result) => {
       console.log(result)
       if (result) {
-        res.json({ result: true, message: 'Mise à jour réussie' });
+        res.json({ result: true, message:"Mise à jour réussie"});
       } else {
         res.json({
           result: false,
