@@ -31,6 +31,7 @@ const userSchema = mongoose.Schema({
     chaussures : [{
       marque: { type: String },
       taille: { type: Number },
+      type: { type: String},
       mensurations : {type : Object},
       fit : {type : Boolean},
     }],

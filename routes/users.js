@@ -68,6 +68,7 @@ User.findOne({ token: req.params.token }).then(data => {
 })
 );
 
+
 // Route pour récupérer les vêtements de l’utilisateur d'une certaine catégorie (haut/bas/chaussures)
 router.get('/userclothes', async (req, res) => {
   const { token, categorie } = req.query;
@@ -75,10 +76,9 @@ router.get('/userclothes', async (req, res) => {
   const mensurations = document.vetements[categorie]
   res.json(mensurations);
 })
-
 // Route pour récupérer tous les vêtements de l’utilisateur
 router.get('/alluserclothes', async (req, res) => {
-  const { token, categorie } = req.query;
+  const { token } = req.query;
   const document = await User.findOne({ token: token });
   const mensurations = document.vetements
   res.json(mensurations);
@@ -100,6 +100,7 @@ router.get('/mensurations', async (req, res) => {
   res.json(mensurations);
 })
 
+//upload la profil picture sur cloudinary
 router.post('/upload', async (req, res) => {
   const photoPath = `tmp/${uniqid()}.jpg`
   console.log(req.files);
@@ -113,6 +114,8 @@ router.post('/upload', async (req, res) => {
   }
  });
 
+
+//update info user
 router.post('/update', async (req, res) => {  
     User.findOneAndUpdate(
       { token: req.body.token },
@@ -135,7 +138,6 @@ router.post('/update', async (req, res) => {
       }
     })
 })
-// TODO ajouter des routes pour ajouter, supprimer des bas et des chaussures
 
 
 // Route pour enregistrer un vêtement de l'utilisateur
