@@ -16,7 +16,8 @@ router.post('/signup', (req, res) => {
     return;
   }
 
-  // Check if the user has not already been registered (avec Regex pour recherche insensible à la casse)
+  // Vérifier si le user est déjà inscrit (avec Regex pour recherche insensible à la casse)
+  // regex superflue car la casse est déjà réglée en front (la route avait déjà été faites)
   User.findOne({ email: { $regex: new RegExp(req.body.email, 'i') } }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.motdepasse, 10);
@@ -116,6 +117,7 @@ router.post('/upload', async (req, res) => {
 
 
 //update info user
+//FIXME vérifier si le mail existe déjà s'il veut update son mail (comme dans signup)
 router.post('/update', async (req, res) => {  
     User.findOneAndUpdate(
       { token: req.body.token },
@@ -144,7 +146,6 @@ router.post('/update', async (req, res) => {
 router.post('/vetements/:categorie/:token', (req, res) => {
   
   const categorie = req.params.categorie
-  console.log(req.body);
 
   const newItem = {
     marque: req.body.marque,
@@ -177,6 +178,7 @@ router.post('/vetements/:categorie/:token', (req, res) => {
 });
 
 // Route pour enregistrer un vêtement en attente de l'utilisateur
+// Redondance avec la route précédente, on aurait sûrement pu rajouter une propriété "en attente" aux vêtements
 router.post('/vetementsenattente/:categorie/:token', (req, res) => {
   
   const categorie = req.params.categorie
@@ -199,7 +201,7 @@ router.post('/vetementsenattente/:categorie/:token', (req, res) => {
     .then((result) => {
       console.log(result)
       if (result) {
-        res.json({ result: true, message: 'Mise à jour réussie' });
+        res.json({ result: true, message:"Mise à jour réussie"});
       } else {
         res.json({
           result: false,
@@ -237,6 +239,7 @@ router.delete('/vetements/:categorie/:token/:vetementId', (req, res) => {
 });
 
 //Route pour supprimer un vêtement en attente de l'utilisateur
+// Redondance avec la route précédente, on aurait sûrement pu rajouter une propriété "en attente" aux vêtements
 router.delete('/enattente/:categorie/:token/:vetementId', (req, res) => {
   const categorie = req.params.categorie
   User.findOneAndUpdate(
@@ -324,7 +327,6 @@ router.put('/mensurations/chaussures/:token', (req, res) => {
 
   const { firstValue, secondValue } = req.body 
 
-  console.log("reqbody",req.body)
   // Mettre à jour les mensurations
   User.findOneAndUpdate(
     { token: req.params.token },
@@ -361,6 +363,7 @@ router.get('/friends', async (req, res) => {
   }
 
   // Tri des amis par 'username' en ordre alphabétique
+  // localCompare est plus propre que simplement un "-" pour les chaînes de caractères
   const sortedFriends = document.amis.sort((a, b) => a.username.localeCompare(b.username));
 
   res.json(sortedFriends);
@@ -389,13 +392,30 @@ router.post('/addfriend', async (req, res) => {
   res.json({ success: true, message: "Ami ajouté avec succès!" });
 });
 
+// Permet de supprimer un ami par username
+router.delete('/deletefriend', async (req, res) => {
+  const { token, friendId } = req.body;
+  
+  const user = await User.findOne({ token: token });
+
+
+  // Vérifier si l'ami est dans la liste
+  if (!user.amis.includes(friendId)) {
+      return res.status(400).json({ message: "L'ami n'est pas dans votre liste" });
+  }
+
+  // Supprimer l'ami de la liste
+  user.amis.pull(friendId);
+  await user.save();
+
+  res.json({ success: true, message: "Ami supprimé avec succès!" });
+});
+
+
 // permet d'afficher la liste des utilisateurs selon le username (ou une partie du username)
 router.get('/searchfriend', async (req, res) => {
   const { username } = req.query;
-  
   const users = await User.find({ username: new RegExp(username, 'i') });
-  
-  console.log(users.map(e => e.username))
   return res.json(users);
 });
 

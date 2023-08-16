@@ -9,6 +9,8 @@ const Marque = require('../models/marques');
 //récupère le nom de toutes les marques en bdd
 router.get('/names', async (req, res) => {
     const {categorie, sexe} = req.query // Recevoir la catégorie comme un paramètre de requète 
+    //distinct récupère un tableau de nom (sans propriété) [adidas,...]
+    //find aurait récupéré un tableau d'objet [{name:adidas},...]
     const marques = await Marque.distinct('name', { [`${sexe}.${categorie}`] : {$exists: true}})
     res.json(marques);
   });
@@ -20,20 +22,6 @@ router.get('/logos', async (req, res) => {
     const marques = await Marque.find({ [`${sexe}.${categorie}`] : {$exists: true}},'name url')
     res.json(marques);
 });
-
-//   router.get('/all', async (req, res) => {
-//     try {
-//       const marques = await Marques.find();
-  
-//       const marqueInfo = marques.map(marque => ({ name: marque.name, url: marque.url }));
-      
-//       res.json(marqueInfo);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des informations des marques.' });
-//     }
-//   });
-  
-  
 
 //récupère les différents types d'une marque 
 router.get('/types', async (req, res) => {

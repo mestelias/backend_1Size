@@ -2,14 +2,15 @@ const mongoose = require("mongoose");
 
 // Création du schéma pour les utilisateurs
 const userSchema = mongoose.Schema({
-  nom: { type: String, required: true },
-  prenom: { type: String, required: true },
+  nom: { type: String },
+  prenom: { type: String },
   genre: { type: String },
-  username: { type: String, unique: true, required: true },
-  email: { type: String, unique: true, required: true },
-  motdepasse: { type: String, required: true },
+  username: { type: String },
+  email: { type: String },
+  motdepasse: { type: String },
   token: { type: String },
   image: { type: String },
+  //clée étrangère
   amis: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   vetements: { 
     haut: [{
@@ -18,6 +19,7 @@ const userSchema = mongoose.Schema({
       coupe: { type: String },
       taille: { type: String },
       mensurations : {type : Object},
+      // fit pour le pouce en l'air (ou pas) dans "mes vêtements"
       fit : {type : Boolean},
     }],
     bas: [{
@@ -36,6 +38,8 @@ const userSchema = mongoose.Schema({
       fit : {type : Boolean},
     }],
   },
+  //redondance avec vetements, pas idéale mais manque de temps.
+  //on aurait pu rajouter une prop à vêtement "en attente" avec un booléen
   vetementsenattente: { 
     haut: [{
       marque: { type: String },
@@ -60,6 +64,7 @@ const userSchema = mongoose.Schema({
       fit : {type : Boolean},
     }],
   },
+  //mensurations de l'utilisateur
   mensurations: {
     haut: {
       tourDePoitrine: { type: Number },
